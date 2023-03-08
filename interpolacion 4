@@ -1,0 +1,39 @@
+import pandas as pd
+import numpy as np
+import sympy as sp
+import matplotlib.pyplot as plt
+
+datos= pd.read_csv("https://raw.githubusercontent.com/asegura4488/Database/main/MetodosComputacionalesReforma/Parabolico.csv", dtype= float)
+X= np.float64(datos.X)
+Y= np.float64(datos.Y)
+x_= np.linspace(1.4,5.6,100)
+
+def Lagrange(x,xi,j):
+  prod= 1
+  n= len(xi)
+  for i in range (n):
+     if i != j: 
+       prod *= (x-xi[i])/(xi[j]-xi[i])
+  return prod
+
+def Interpolate (x, xi, yi):
+  sum = 0
+  n= len(xi)
+  for j in range (n):
+    sum += yi[j] * Lagrange(x,xi,j)
+  return sum
+
+y_ = Interpolate(x_, X, Y)
+plt.plot(x_,y_)
+
+for i in range(len(x_)):
+    if round(y_[i], 2) == 0.40 and x_[i] > 1.4:
+       rango= x_[i] - 1.4
+            
+altura= 0
+for i in range(len(x_)):
+    if y_[i] > altura:
+        altura= y_[i]
+
+theta= np.arctan(2*altura/rango)
+print(theta*360/(2*np.pi))
