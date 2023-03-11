@@ -1,0 +1,57 @@
+import pandas as pd
+import numpy as np
+import sympy as sp
+import matplotlib.pyplot as plt
+
+datos= pd.read_csv("https://raw.githubusercontent.com/asegura4488/Database/main/MetodosComputacionalesReforma/InterpolacionNewtonNoequi.csv", dtype= float)
+X= np.float64(datos.X)
+Y= np.float64(datos.Y)
+
+ms= np.zeros((len(Y)))
+hs= np.zeros((len(Y)-1))
+x = np.linspace(0,6,100)
+print(datos)
+
+
+def m(x, y0, y1, i):
+    return (y1 - y0) / (x[i] - x[0])
+
+
+ms[0] = 1
+ms[1] = m(X, Y[0], Y[1], 1)
+
+def pendientes(X, Y, ms):
+    for i in range(2, len(X)):
+        print(i)
+        y1= Y[1]
+        y2= Y[2]
+        for j in range(1, i):
+            print(j)
+            m0= m(X, y1, y2, j+1)
+            print(m0)
+            y1= m0
+            if i+1 < 6:
+                y2= m(X, y1, Y[i+1],j)
+        m1= m(X, ms[i-1], m0, i)
+        print(m1)
+        ms[i] = m1
+    return ms
+
+pendiente= pendientes(X,Y,ms)
+print(pendiente)
+
+def polinomio(x, y, X):
+    ps= [y[0]]
+    for i in range(1, len(x)):
+        m= pendiente[i]
+        h= 1
+        for j in range(1, i+1):
+            h *= X - x[j-1]
+        p= m*h
+        ps.append(p)
+    return sum(ps)
+
+y= polinomio(X,Y,x)
+
+plt.plot(x,y)
+plt.scatter(X,Y)
