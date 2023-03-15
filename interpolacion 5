@@ -10,43 +10,45 @@ Y= np.float64(datos.Y)
 ms= np.zeros((len(Y)))
 hs= np.zeros((len(Y)-1))
 x = np.linspace(0,6,100)
-print(datos)
 
 
-def m(x, y0, y1, i):
-    return (y1 - y0) / (x[i] - x[0])
+
+def EncontrarTodasPendientes(X, Y):
+    pendientes= []
+    for i in range(1, len(X)):
+        pendiente = (Y[i] - Y[i-1]) / (X[i] - X[0])
+        pendientes.append(pendiente)
+    return pendientes
+
+pendientes= EncontrarTodasPendientes(X, Y)
 
 
-ms[0] = 1
-ms[1] = m(X, Y[0], Y[1], 1)
+def PendientePolinomio(pendientes, m):
+    pens= pendientes[0:m]
+    n= len(pens)
+    if m == 1:
+        return pendientes[0]
+    for i in range(1, n):
+        n= len(pens)
+        pen= []
+        indices = np.linspace(0, n-1, n)
+        for j in indices:
+            if j > 0:
+                entrada = pens[int(j)] - pens[int(j)-1]
+                p = entrada / (x[n] - x[0])
+                pen.append(p)
+        pens = pen
+    return pens[0]
 
-def pendientes(X, Y, ms):
-    for i in range(2, len(X)):
-        print(i)
-        y1= Y[1]
-        y2= Y[2]
-        for j in range(1, i):
-            print(j)
-            m0= m(X, y1, y2, j+1)
-            print(m0)
-            y1= m0
-            if i+1 < 6:
-                y2= m(X, y1, Y[i+1],j)
-        m1= m(X, ms[i-1], m0, i)
-        print(m1)
-        ms[i] = m1
-    return ms
-
-pendiente= pendientes(X,Y,ms)
-print(pendiente)
 
 def polinomio(x, y, X):
     ps= [y[0]]
     for i in range(1, len(x)):
-        m= pendiente[i]
+        m= PendientePolinomio(pendientes, i)
         h= 1
         for j in range(1, i+1):
-            h *= X - x[j-1]
+            print(j)
+            h *= (X - x[j-1])
         p= m*h
         ps.append(p)
     return sum(ps)
