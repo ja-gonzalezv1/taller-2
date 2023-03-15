@@ -1,0 +1,41 @@
+import numpy as np
+import sympy as sp
+import matplotlib.pyplot as plt
+
+
+x= sp.Symbol("x", real= True)
+
+
+def Polinomio (x, n):
+    f= (x**2 -1)**n
+    return (np.e**(x)/np.math.factorial(n)) * (sp.diff(f, x, n))
+
+def DPolinomio(p, x):
+    return sp.diff(p,x)
+
+def p(polinomio, X):
+    return polinomio.evalf(subs={x: X})
+
+def dp(dpolinomio, X):
+    return dpolinomio.evalf(subs={x: X})
+
+
+polinomios= []
+for i in range(20):
+    polinomio= Polinomio(x, i)
+    polinomios.append(polinomio)
+    
+
+n= 100
+x_= np.linspace(0, n, n+1)
+x= tuple(x_)
+polinomio= polinomios[1]
+y= []
+
+for j in x:
+    y_= p(polinomio, int(j))
+    print(y_)
+    y.append(y_)
+    
+plt.plot(x_,y)
+
