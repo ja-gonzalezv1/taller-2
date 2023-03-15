@@ -28,14 +28,13 @@ for i in range(20):
 
 n= 100
 x_= np.linspace(0, n, n+1)
-x= tuple(x_)
+X= tuple(x_)
 polinomio= polinomios[1]
 y= []
 
-for j in x:
+for j in X:
     y_= p(polinomio, int(j))
     print(y_)
     y.append(y_)
     
 plt.plot(x_,y)
-
